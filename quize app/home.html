@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App For web3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #quiz-container {
+            width: 400px;
+            margin: auto;
+        }
+
+        .question {
+            margin-bottom: 10px;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <div id="question-container" class="question"></div>
+    <ul id="options-container" class="options"></ul>
+    <button onclick="nextQuestion()">Next</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "What is the capital of Nigeria?",
+            options: ["Abuja", "Benin", "lagos"],
+            correctAnswer: "Abuja"
+        },
+        {
+            question: "What's color of the sky?",
+            options: ["brown", "red", "blue"],
+            correctAnswer: "blue"
+        },
+        {
+            question: "Who is the current president of nigeria?",
+            options: ["tinubu", "Goodluck", "buhari"],
+            correctAnswer: "tinubu"
+        },
+        {
+            question: "What is the largest mammal?",
+            options: ["Elephant", "Blue Whale", "Giraffe"],
+            correctAnswer: "Blue Whale"
+        }
+    ];
+
+    let currentQuestion = 0;
+    let userAnswers = [];
+    const questionContainer = document.getElementById('question-container');
+    const optionsContainer = document.getElementById('options-container');
+    const resultContainer = document.getElementById('result');
+
+    function loadQuestion() {
+        const currentQuizData = quizData[currentQuestion];
+        questionContainer.textContent = currentQuizData.question;
+
+        optionsContainer.innerHTML = '';
+        currentQuizData.options.forEach((option, index) => {
+            const li = document.createElement('li');
+            li.textContent = option;
+            li.onclick = () => selectAnswer(index);
+            optionsContainer.appendChild(li);
+        });
+    }
+
+    function selectAnswer(index) {
+        userAnswers[currentQuestion] = quizData[currentQuestion].options[index];
+        // Highlight the selected option for user feedback
+        optionsContainer.childNodes.forEach((li, i) => {
+            li.style.backgroundColor = i === index ? '#ddd' : 'white';
+        });
+    }
+
+    function nextQuestion() {
+        if (currentQuestion < quizData.length - 1) {
+            currentQuestion++;
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        let score = 0;
+        for (let i = 0; i < quizData.length; i++) {
+            if (userAnswers[i] === quizData[i].correctAnswer) {
+                score++;
+            }
+        }
+
+        resultContainer.textContent = `Your score: ${score} out of ${quizData.length}`;
+    }
+
+    // Initial load
+    loadQuestion();
+</script>
+
+</body>
+</html>
